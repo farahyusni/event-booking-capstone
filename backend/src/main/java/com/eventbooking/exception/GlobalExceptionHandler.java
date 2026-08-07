@@ -39,7 +39,11 @@ public class GlobalExceptionHandler {
 
     //fallback for anything unhandled - still returns clean JSON instead of a stack trace
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+    }
+
+    private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", status.value());
