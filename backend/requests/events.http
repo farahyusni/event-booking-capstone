@@ -1,0 +1,102 @@
+### 0. Login as admin
+# @name loginAdmin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### 0b. Login as a regular customer for negative tests
+# @name loginCustomer
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "farah@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### 1. Create event as admin -> expect 201
+# @name createEvent
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Spring Boot Meetup",
+  "description": "Monthly meetup for backend devs",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "KL Convention Centre",
+  "capacity": 50,
+  "price": 0
+}
+
+###
+
+### 2. Create event as customer -> expect 403
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Should be blocked",
+  "description": "Customers cannot create events",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "Nowhere",
+  "capacity": 10,
+  "price": 0
+}
+
+###
+
+### 3. List events as customer -> expect 200
+GET http://localhost:8080/api/events
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 4. List events, no token -> expect 401
+GET http://localhost:8080/api/events
+
+###
+
+### 5. Get single event -> expect 200
+GET http://localhost:8080/api/events/{{createEvent.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 6. Update event, shrink capacity below 0 booked -> expect 200 (nothing booked yet)
+PUT http://localhost:8080/api/events/{{createEvent.response.body.$.id}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Spring Boot Meetup",
+  "description": "Monthly meetup for backend devs",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "KL Convention Centre",
+  "capacity": 30,
+  "price": 0
+}
+
+###
+
+### 7. Deactivate event as admin -> expect 204
+DELETE http://localhost:8080/api/events/{{createEvent.response.body.$.id}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 8. Deactivate as customer -> expect 403
+DELETE http://localhost:8080/api/events/{{createEvent.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
