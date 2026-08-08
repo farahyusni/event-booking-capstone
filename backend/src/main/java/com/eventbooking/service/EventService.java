@@ -3,6 +3,8 @@ package com.eventbooking.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +22,23 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public Page<Event> getEvents(String category, String keyword, Pageable pageable) {
+        boolean hasCategory = category != null && !category.isBlank();
+        boolean hasKeyword = keyword != null && !keyword.isBlank();
+
+        if (hasCategory && hasKeyword) {
+            return eventRepository.findByCategoryIgnoreCaseAndTitleContainingIgnoreCase(category, keyword, pageable);
+        }
+
+        if(hasCategory) {
+            return eventRepository.findByCategoryIgnoreCase(category, pageable);
+        }
+
+        if(hasKeyword) {
+            return eventRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+        }
+
+        return eventRepository.findAll(pageable);
     }
 
     public Event getEventById(String id) {

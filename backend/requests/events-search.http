@@ -1,0 +1,100 @@
+### 0. Login as admin (must already exist with role ADMIN from Day 4 setup)
+# @name loginAdmin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### Seed: a few events across two categories
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Spring Boot Meetup",
+  "description": "Backend meetup",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "KL Convention Centre",
+  "capacity": 50,
+  "price": 0
+}
+
+###
+
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "React Conference",
+  "description": "Frontend conference",
+  "category": "Tech",
+  "eventDate": "2026-10-01T09:00:00",
+  "venue": "Sunway",
+  "capacity": 200,
+  "price": 150
+}
+
+###
+
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Jazz Night",
+  "description": "Live music evening",
+  "category": "Music",
+  "eventDate": "2026-09-20T20:00:00",
+  "venue": "No Black Tie",
+  "capacity": 80,
+  "price": 60
+}
+
+###
+
+### 1. No filters -> all events, default sort by eventDate asc, page 0 size 10
+GET http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 2. Filter by category=Tech -> 2 results (Spring Boot Meetup, React Conference)
+GET http://localhost:8080/api/events?category=Tech
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 3. Keyword search "conference" -> 1 result
+GET http://localhost:8080/api/events?keyword=conference
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 4. Category + keyword combined -> 1 result (Tech + "react")
+GET http://localhost:8080/api/events?category=Tech&keyword=react
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 5. Sort by price descending -> React Conference (150) first
+GET http://localhost:8080/api/events?sortBy=price&direction=desc
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 6. Pagination: size=1 page=0 -> 1 result, totalElements=3, totalPages=3
+GET http://localhost:8080/api/events?size=1&page=0
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 7. Pagination: page beyond range -> empty content, totals still populated
+GET http://localhost:8080/api/events?size=1&page=99
+Authorization: Bearer {{loginAdmin.response.body.$.token}}

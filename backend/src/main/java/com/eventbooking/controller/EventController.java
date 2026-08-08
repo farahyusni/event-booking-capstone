@@ -1,6 +1,7 @@
 package com.eventbooking.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventbooking.dto.EventRequest;
@@ -11,6 +12,10 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,8 +39,18 @@ public class EventController {
     }
 
     @GetMapping
-    public List <Event> getAllEvents() {
-        return eventService.getAllEvents();
+    public Page <Event> getAllEvents(
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "eventDate") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction) {
+
+            Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+
+            return eventService.getEvents(category, keyword, pageable);
     }
 
     @GetMapping("/{id}")
