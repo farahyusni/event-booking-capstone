@@ -1,0 +1,128 @@
+### 0. Login as admin
+# @name loginAdmin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### 0b. Login as customer
+# @name loginCustomer
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "farah@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### 1. Create an event with only 1 seat, for boundary testing
+# @name tinyEvent
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Last Seat Test",
+  "description": "capacity=1 to test the atomic guard",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "Test Hall",
+  "capacity": 1,
+  "price": 0
+}
+
+###
+
+### 2. Create a PAST event, for the past-date rule
+# @name pastEvent
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Already Happened",
+  "description": "eventDate in the past",
+  "category": "Tech",
+  "eventDate": "2020-01-01T18:00:00",
+  "venue": "Test Hall",
+  "capacity": 10,
+  "price": 0
+}
+
+###
+
+### 3. Book the 1 available seat -> expect 201, seatsAvailable becomes 0
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{tinyEvent.response.body.$.id}}",
+  "seatsRequested": 1
+}
+
+###
+
+### 4. Book it again -> expect 409 "Not enough seats available"
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{tinyEvent.response.body.$.id}}",
+  "seatsRequested": 1
+}
+
+###
+
+### 5. Confirm via GET that seatsAvailable is exactly 0, not negative
+GET http://localhost:8080/api/events/{{tinyEvent.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 6. Book a past event -> expect 400 "Cannot book a past event"
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{pastEvent.response.body.$.id}}",
+  "seatsRequested": 1
+}
+
+###
+
+### 7. Book a cancelled event -> expect 400 "Event is cancelled"
+DELETE http://localhost:8080/api/events/{{pastEvent.response.body.$.id}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{pastEvent.response.body.$.id}}",
+  "seatsRequested": 1
+}
+
+###
+
+### 8. Book a non-existent event -> expect 404
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "000000000000000000000000",
+  "seatsRequested": 1
+}

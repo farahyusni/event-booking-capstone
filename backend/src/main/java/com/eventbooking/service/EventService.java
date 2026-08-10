@@ -5,6 +5,11 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,9 +22,11 @@ import com.eventbooking.repository.EventRepository;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final MongoTemplate mongoTemplate;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, MongoTemplate mongoTemplate) {
         this.eventRepository = eventRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     public Page<Event> getEvents(String category, String keyword, Pageable pageable) {
@@ -89,5 +96,16 @@ public class EventService {
         Event event = getEventById(id);
         event.setCancelled(true);
         eventRepository.save(event);
+    }
+
+    public boolean reserveSeats(String eventId, int seats) {
+        Query query = new Query(Criteria.where("id").is(eventId)
+                .and("cancelled").gte(false)
+                .and("seatsAvailable").gte(seats));
+        Update update = new Update().inc("seatsAvailable", -seats);
+
+        Event updated = mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), Event.class);
+
+        return updated != null;
     }
 }
