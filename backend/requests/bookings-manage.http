@@ -1,0 +1,112 @@
+### 0. Login as admin and customer
+# @name loginAdmin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+# @name loginCustomer
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "farah@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### 1. Create an event to book against
+# @name event
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Cancel Test Event",
+  "description": "test",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "Test Hall",
+  "capacity": 5,
+  "price": 0
+}
+
+###
+
+### 2. Customer books 2 seats
+# @name booking
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{event.response.body.$.id}}",
+  "seatsRequested": 2
+}
+
+###
+
+### 3. Customer views own bookings
+GET http://localhost:8080/api/bookings/mine
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 4. Customer tries to view ALL bookings -> expect 403
+GET http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 5. Admin views ALL bookings -> expect 200, includes the customer's booking
+GET http://localhost:8080/api/bookings
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 6. Confirm event seatsAvailable is 3 (5 - 2 booked)
+GET http://localhost:8080/api/events/{{event.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 7. Customer cancels their booking -> expect 200, status CANCELLED
+DELETE http://localhost:8080/api/bookings/{{booking.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 8. Confirm seatsAvailable is back to 5
+GET http://localhost:8080/api/events/{{event.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 9. Cancel the same booking again -> expect 400 "already cancelled"
+DELETE http://localhost:8080/api/bookings/{{booking.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 10. Admin tries to cancel someone else's booking -> expect 403
+# (re-book first since #7 already cancelled it)
+# @name booking2
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{event.response.body.$.id}}",
+  "seatsRequested": 1
+}
+
+###
+
+DELETE http://localhost:8080/api/bookings/{{booking2.response.body.$.id}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}

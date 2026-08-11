@@ -108,4 +108,10 @@ public class EventService {
 
         return updated != null;
     }
+
+    public void releaseSeats(String eventId, int seats) {
+        Query query = new Query(Criteria.where("id").is(eventId));
+        Update update = new Update().inc("seatsAvailable", seats);
+        mongoTemplate.updateFirst(query, update, Event.class);
+    }
 }
