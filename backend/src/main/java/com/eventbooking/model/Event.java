@@ -19,14 +19,14 @@ import lombok.NoArgsConstructor;
 public class Event {
 
     @Id
-    private String id;
+    private String id;  // PK for Event
 
     private String title;
 
     private String description;
 
     @Indexed
-    private String category;
+    private String category; // is indexed for faster search
 
     private LocalDateTime eventDate;
 

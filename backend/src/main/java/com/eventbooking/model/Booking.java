@@ -19,17 +19,17 @@ import lombok.NoArgsConstructor;
 public class Booking {
 
     @Id
-    private String id;
+    private String id;  // PK for Booking
 
     @Indexed
-    private String userId;
+    private String userId;  // is indexed for faster search
 
     @Indexed
-    private String eventId;
+    private String eventId; // is indexed for faster search
 
     private int seatsBooked;
 
-    private Status status; // CONFIRMED, CANCELLED
+    private Status status; 
 
     private LocalDateTime bookedAt;
 

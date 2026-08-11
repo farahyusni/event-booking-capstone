@@ -19,12 +19,12 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    private String id;
+    private String id;  // PK for User
 
     private String name;
 
     @Indexed(unique = true)
-    private String email;
+    private String email;   // is unique and indexed for faster search
 
     private String password;
 

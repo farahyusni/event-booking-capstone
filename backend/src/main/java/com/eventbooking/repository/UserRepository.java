@@ -8,6 +8,6 @@ import com.eventbooking.model.User;
 
 public interface UserRepository extends MongoRepository<User, String>{
 
-    Optional<User> findByEmail(String email);
-    boolean existsByEmail(String email);
+    Optional<User> findByEmail(String email);   // use in login to find user by email for authentication
+    boolean existsByEmail(String email);    // use in registration to check if email already exists
 }
