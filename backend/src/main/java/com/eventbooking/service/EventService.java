@@ -100,7 +100,7 @@ public class EventService {
 
     public boolean reserveSeats(String eventId, int seats) {
         Query query = new Query(Criteria.where("id").is(eventId)
-                .and("cancelled").gte(false)
+                .and("cancelled").is(false)
                 .and("seatsAvailable").gte(seats));
         Update update = new Update().inc("seatsAvailable", -seats);
 
