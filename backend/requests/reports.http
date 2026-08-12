@@ -1,0 +1,103 @@
+### 0. Login as admin and customer
+# @name loginAdmin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+# @name loginCustomer
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "farah@gmail.com",
+  "password": "abc12345"
+}
+
+###
+
+### 1. Create two events with different prices
+# @name eventA
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Report Test A",
+  "description": "test",
+  "category": "Tech",
+  "eventDate": "2026-09-15T18:00:00",
+  "venue": "Hall A",
+  "capacity": 20,
+  "price": 50
+}
+
+###
+
+# @name eventB
+POST http://localhost:8080/api/events
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "title": "Report Test B",
+  "description": "test",
+  "category": "Music",
+  "eventDate": "2026-09-20T18:00:00",
+  "venue": "Hall B",
+  "capacity": 20,
+  "price": 100
+}
+
+###
+
+### 2. Book seats on both events
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{eventA.response.body.$.id}}",
+  "seatsRequested": 3
+}
+
+###
+
+# @name bookingB
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{eventB.response.body.$.id}}",
+  "seatsRequested": 2
+}
+
+###
+
+### 3. Cancel the booking on event B - it must disappear from the reports' counts
+DELETE http://localhost:8080/api/bookings/{{bookingB.response.body.$.id}}
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
+
+###
+
+### 4. Bookings-per-event as admin -> expect only Event A: totalBookings=1, totalSeatsBooked=3
+GET http://localhost:8080/api/reports/bookings-per-event
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 5. Revenue-per-event as admin -> expect only Event A: revenue=150 (3 seats x 50)
+GET http://localhost:8080/api/reports/revenue-per-event
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+### 6. Customer tries to view reports -> expect 403
+GET http://localhost:8080/api/reports/bookings-per-event
+Authorization: Bearer {{loginCustomer.response.body.$.token}}
