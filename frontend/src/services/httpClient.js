@@ -27,3 +27,18 @@ export async function apiRequest(path, options = {}) {
 
   return responseBody;
 }
+
+// Turns a params object into a query string, skipping any value that's empty,
+// null or undefined — so an unfilled filter never becomes "?category=" or
+// "?page=undefined" on the actual request.
+export function buildQueryString(params) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      searchParams.set(key, value);
+    }
+  });
+
+  return searchParams.toString();
+}
