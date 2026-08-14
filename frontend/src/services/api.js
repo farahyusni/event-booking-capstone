@@ -32,3 +32,22 @@ export function fetchPagedEvents(token, params) {
 export function fetchEventById(id, token) {
   return apiRequest(`/api/events/${id}`, { token });
 }
+
+export function createBookingRequest(token, eventId, seatsRequested) {
+  return apiRequest('/api/bookings', {
+    method: 'POST',
+    token,
+    body: { eventId, seatsRequested }
+  });
+}
+
+export function fetchMyBookings(token) {
+  return apiRequest('/api/bookings/mine', { token });
+}
+
+export function cancelBookingRequest(id, token) {
+  return apiRequest(`/api/bookings/${id}`, {
+    method: 'DELETE',
+    token
+  });
+}

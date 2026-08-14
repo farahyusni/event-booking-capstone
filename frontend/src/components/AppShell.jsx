@@ -33,6 +33,7 @@ export default function AppShell() {
       <nav className="app-nav" aria-label="Main navigation">
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/events">Events</NavLink>
+        <NavLink to="/my-bookings">My Bookings</NavLink>
       </nav>
 
       <main>
