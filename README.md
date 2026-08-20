@@ -184,26 +184,26 @@ All endpoints are prefixed with `/api`. "Auth" = requires a valid `Authorization
 
 ## Screenshots
 
-**Login**
-![Login page](docs/screenshots/login.png)
+<p align="center"><b>Login</b><br/>
+<img src="docs/screenshots/login.png" width="700" alt="Login page" /></p>
 
-**Events list**
-![Events list](docs/screenshots/events-list.png)
+<p align="center"><b>Events list</b><br/>
+<img src="docs/screenshots/events-list.png" width="700" alt="Events list" /></p>
 
-**Event details + booking**
-![Event details + booking](docs/screenshots/event-details.png)
+<p align="center"><b>Event details + booking</b><br/>
+<img src="docs/screenshots/event-details.png" width="700" alt="Event details and booking form" /></p>
 
-**My Bookings**
-![My Bookings](docs/screenshots/my-bookings.png)
+<p align="center"><b>My Bookings</b><br/>
+<img src="docs/screenshots/my-bookings.png" width="700" alt="My Bookings page" /></p>
 
-**Admin — Manage Events**
-![Admin — Manage Events](docs/screenshots/admin-events.png)
+<p align="center"><b>Admin — Manage Events</b><br/>
+<img src="docs/screenshots/admin-events.png" width="700" alt="Admin manage events page" /></p>
 
-**Admin — All Bookings**
-![Admin — All Bookings](docs/screenshots/admin-bookings.png)
+<p align="center"><b>Admin — All Bookings</b><br/>
+<img src="docs/screenshots/admin-bookings.png" width="700" alt="Admin all bookings page" /></p>
 
-**Admin — Reports**
-![Admin — Reports](docs/screenshots/admin-reports.png)
+<p align="center"><b>Admin — Reports</b><br/>
+<img src="docs/screenshots/admin-reports.png" width="700" alt="Admin reports page" /></p>
 
 ## Assumptions, Limitations & Notes
 
