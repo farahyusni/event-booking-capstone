@@ -184,19 +184,26 @@ All endpoints are prefixed with `/api`. "Auth" = requires a valid `Authorization
 
 ## Screenshots
 
-Add screenshots of the running app here before final submission, e.g. saved under `docs/screenshots/` and referenced like:
-
-```md
+**Login**
 ![Login page](docs/screenshots/login.png)
-![Events list](docs/screenshots/events-list.png)
-![Event details + booking](docs/screenshots/event-details.png)
-![My Bookings](docs/screenshots/my-bookings.png)
-![Admin — Manage Events](docs/screenshots/admin-events.png)
-![Admin — All Bookings](docs/screenshots/admin-bookings.png)
-![Admin — Reports](docs/screenshots/admin-reports.png)
-```
 
-Suggested pages to capture: login, register, events list (with a filter/sort applied), event details with a booking made, my bookings, and all three admin pages.
+**Events list**
+![Events list](docs/screenshots/events-list.png)
+
+**Event details + booking**
+![Event details + booking](docs/screenshots/event-details.png)
+
+**My Bookings**
+![My Bookings](docs/screenshots/my-bookings.png)
+
+**Admin — Manage Events**
+![Admin — Manage Events](docs/screenshots/admin-events.png)
+
+**Admin — All Bookings**
+![Admin — All Bookings](docs/screenshots/admin-bookings.png)
+
+**Admin — Reports**
+![Admin — Reports](docs/screenshots/admin-reports.png)
 
 ## Assumptions, Limitations & Notes
 
