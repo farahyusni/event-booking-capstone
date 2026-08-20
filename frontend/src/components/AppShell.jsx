@@ -6,7 +6,7 @@ import { useAuth } from '../context/useAuth.js';
 // this once means Day 12/13 pages just plug straight into the same shell
 // instead of each page re-building its own header/logout button.
 export default function AppShell() {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -28,12 +28,18 @@ export default function AppShell() {
         </div>
       </header>
 
-      {/* More links (My Bookings on Day 12, Admin on Day 13) get added here
-          as those pages are built — no dead links in the meantime. */}
       <nav className="app-nav" aria-label="Main navigation">
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/events">Events</NavLink>
         <NavLink to="/my-bookings">My Bookings</NavLink>
+
+        {isAdmin && (
+          <>
+            <NavLink to="/admin/events">Manage Events</NavLink>
+            <NavLink to="/admin/bookings">All Bookings</NavLink>
+            <NavLink to="/admin/reports">Reports</NavLink>
+          </>
+        )}
       </nav>
 
       <main>

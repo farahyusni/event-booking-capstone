@@ -159,12 +159,18 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   border: 1px solid #ccd6e3;
   border-radius: 12px;
   padding: 12px;
   background: #fbfcff;
+  font-family: inherit;
+}
+
+textarea {
+  resize: vertical;
 }
 
 /* ---------- Event list (one row per event, links to the details page) ---------- */
@@ -358,4 +364,31 @@ button:disabled {
 .success-message {
   background: #dcfce7;
   color: #166534;
+}
+
+/* ---------- Admin pages (event management, bookings, reports) ---------- */
+.admin-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th,
+.report-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.report-table th {
+  color: #667085;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

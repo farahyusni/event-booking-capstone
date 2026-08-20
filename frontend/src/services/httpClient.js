@@ -1,3 +1,5 @@
+import { AUTH_STORAGE_KEY } from '../constants/storage.js';
+
 export async function apiRequest(path, options = {}) {
   const { method = 'GET', token, body, headers = {} } = options;
 
@@ -21,6 +23,19 @@ export async function apiRequest(path, options = {}) {
   const responseBody = contentType.includes('application/json') ? await response.json() : null;
 
   if (!response.ok) {
+    // A 401 here means the token itself is missing/expired/invalid (Spring
+    // Security rejects it before the request even reaches a controller, so
+    // there's rarely a JSON body to read a message from). AuthContext only
+    // checks "is there a token in localStorage", not "is it still valid", so
+    // without this the app would otherwise sit on a stale session showing
+    // cryptic "Request failed with status 401" errors on every call.
+    if (response.status === 401) {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+        window.location.assign('/login');
+      }
+    }
+
     const message = responseBody?.message || `Request failed with status ${response.status}`;
     throw new Error(message);
   }

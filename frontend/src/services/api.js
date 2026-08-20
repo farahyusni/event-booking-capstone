@@ -51,3 +51,40 @@ export function cancelBookingRequest(id, token) {
     token
   });
 }
+
+// ---------- Admin-only calls (backend enforces the ROLE_ADMIN check too) ----------
+
+export function createEventRequest(token, eventPayload) {
+  return apiRequest('/api/events', {
+    method: 'POST',
+    token,
+    body: eventPayload
+  });
+}
+
+export function updateEventRequest(token, id, eventPayload) {
+  return apiRequest(`/api/events/${id}`, {
+    method: 'PUT',
+    token,
+    body: eventPayload
+  });
+}
+
+export function deactivateEventRequest(token, id) {
+  return apiRequest(`/api/events/${id}`, {
+    method: 'DELETE',
+    token
+  });
+}
+
+export function fetchAllBookings(token) {
+  return apiRequest('/api/bookings', { token });
+}
+
+export function fetchBookingsPerEventReport(token) {
+  return apiRequest('/api/reports/bookings-per-event', { token });
+}
+
+export function fetchRevenuePerEventReport(token) {
+  return apiRequest('/api/reports/revenue-per-event', { token });
+}

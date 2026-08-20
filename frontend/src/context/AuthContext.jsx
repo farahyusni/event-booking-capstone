@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import { loginRequest, registerRequest } from '../services/api.js';
+import { AUTH_STORAGE_KEY as STORAGE_KEY } from '../constants/storage.js';
 import { AuthContext } from './auth-context.js';
-
-const STORAGE_KEY = 'eventBookingAuth';
 
 function readStoredAuth() {
   try {
