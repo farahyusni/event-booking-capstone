@@ -1,32 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import EmptyState from '../../components/EmptyState.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
 import LoadingMessage from '../../components/LoadingMessage.jsx';
 import { useAuth } from '../../context/useAuth.js';
 import { fetchBookingsPerEventReport, fetchRevenuePerEventReport } from '../../services/api.js';
 
+const initialState = { bookingsReport: [], revenueReport: [], loading: true, error: '' };
+
+function reportsReducer(state, action) {
+  switch (action.type) {
+    case 'FETCH_START':
+      return { ...state, loading: true, error: '' };
+    case 'FETCH_SUCCESS':
+      return { ...state, bookingsReport: action.bookings, revenueReport: action.revenue, loading: false, error: '' };
+    case 'FETCH_ERROR':
+      return { ...state, loading: false, error: action.message };
+    default:
+      return state;
+  }
+}
+
 // Both reports come from the same MongoDB aggregation pipeline in
 // ReportService.java (group bookings by eventId) — this page just renders
 // the two projections of it side by side.
 export default function AdminReportsPage() {
   const { token } = useAuth();
-  const [bookingsReport, setBookingsReport] = useState([]);
-  const [revenueReport, setRevenueReport] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [state, dispatch] = useReducer(reportsReducer, initialState);
+  const { bookingsReport, revenueReport, loading, error } = state;
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    dispatch({ type: 'FETCH_START' });
 
     Promise.all([fetchBookingsPerEventReport(token), fetchRevenuePerEventReport(token)])
       .then(([bookings, revenue]) => {
-        if (cancelled) return;
-        setBookingsReport(bookings);
-        setRevenueReport(revenue);
+        if (!cancelled) {
+          dispatch({ type: 'FETCH_SUCCESS', bookings, revenue });
+        }
       })
-      .catch((err) => !cancelled && setError(err.message || 'Could not load reports.'))
-      .finally(() => !cancelled && setLoading(false));
+      .catch((err) => {
+        if (!cancelled) {
+          dispatch({ type: 'FETCH_ERROR', message: err.message || 'Could not load reports.' });
+        }
+      });
 
     return () => {
       cancelled = true;

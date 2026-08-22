@@ -39,7 +39,6 @@ export default function AdminEventFormPage() {
     }
 
     let cancelled = false;
-    setLoading(true);
 
     fetchEventById(eventId, token)
       .then((event) => {

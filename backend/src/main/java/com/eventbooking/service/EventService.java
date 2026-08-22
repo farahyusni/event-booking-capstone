@@ -98,6 +98,12 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    public void reactivateEvent(String id) {
+        Event event = getEventById(id);
+        event.setCancelled(false);
+        eventRepository.save(event);
+    }
+
     // to avoid race conditions when multiple users are booking the same event at the same time
     public boolean reserveSeats(String eventId, int seats) {    // use MongoTemplate to atomically do the check and update in one operation 
         Query query = new Query(Criteria.where("id").is(eventId)    // check event id, not cancelled, and enough seats available

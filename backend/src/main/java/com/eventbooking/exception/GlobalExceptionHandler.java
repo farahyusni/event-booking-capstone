@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, message);
     }
 
-    //catch requests to routes that don't exist -> 404 instead of 500
+    //catch requests to routes that don't exist -> 404 instead of 500q  `2r
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNoResourceFound(NoResourceFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, "No such route");

@@ -9,7 +9,7 @@ import LoadingMessage from '../../components/LoadingMessage.jsx';
 import PaginationControls from '../../components/PaginationControls.jsx';
 import { useAuth } from '../../context/useAuth.js';
 import { useEventData } from '../../context/useEventData.js';
-import { deactivateEventRequest } from '../../services/api.js';
+import { deactivateEventRequest, reactivateEventRequest } from '../../services/api.js';
 
 // Reuses the same EventDataContext as the customer-facing EventsPage.jsx —
 // same search/filter/sort/pagination the brief asks for, just with admin
@@ -20,6 +20,7 @@ export default function AdminEventsPage() {
   const { items, loading, error, pageInfo, filters, loadEventsPage } = useEventData();
   const [actionError, setActionError] = useState('');
   const [deactivatingId, setDeactivatingId] = useState('');
+  const [reactivatingId, setReactivatingId] = useState('');
 
   useEffect(() => {
     if (initialLoadRef.current) {
@@ -45,6 +46,22 @@ export default function AdminEventsPage() {
       setActionError(err.message || 'Could not deactivate this event.');
     } finally {
       setDeactivatingId('');
+    }
+  }
+
+  // No confirmation dialog here, unlike deactivate — reactivating is safe and
+  // reversible (and can't un-block the past-event booking rule regardless).
+  async function handleReactivate(eventId) {
+    setReactivatingId(eventId);
+    setActionError('');
+
+    try {
+      await reactivateEventRequest(token, eventId);
+      await loadEventsPage({ page: pageInfo.page });
+    } catch (err) {
+      setActionError(err.message || 'Could not reactivate this event.');
+    } finally {
+      setReactivatingId('');
     }
   }
 
@@ -96,14 +113,25 @@ export default function AdminEventsPage() {
                 <div className="admin-row-actions">
                   <CategoryBadge category={event.category} />
                   <Link className="button-link secondary" to={`/admin/events/${event.id}/edit`}>Edit</Link>
-                  <button
-                    type="button"
-                    className="button-link secondary"
-                    disabled={event.cancelled || deactivatingId === event.id}
-                    onClick={() => handleDeactivate(event.id)}
-                  >
-                    {deactivatingId === event.id ? 'Deactivating...' : event.cancelled ? 'Deactivated' : 'Deactivate'}
-                  </button>
+                  {event.cancelled ? (
+                    <button
+                      type="button"
+                      className="button-link secondary"
+                      disabled={reactivatingId === event.id}
+                      onClick={() => handleReactivate(event.id)}
+                    >
+                      {reactivatingId === event.id ? 'Reactivating...' : 'Reactivate'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="button-link secondary"
+                      disabled={deactivatingId === event.id}
+                      onClick={() => handleDeactivate(event.id)}
+                    >
+                      {deactivatingId === event.id ? 'Deactivating...' : 'Deactivate'}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

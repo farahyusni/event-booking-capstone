@@ -74,4 +74,10 @@ public class EventController {
         eventService.deactivateEvent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/reactivate")
+    public ResponseEntity<Void> reactivateEvent(@PathVariable String id) {
+        eventService.reactivateEvent(id);
+        return ResponseEntity.noContent().build();
+    }
 }

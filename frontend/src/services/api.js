@@ -77,6 +77,13 @@ export function deactivateEventRequest(token, id) {
   });
 }
 
+export function reactivateEventRequest(token, id) {
+  return apiRequest(`/api/events/${id}/reactivate`, {
+    method: 'PUT',
+    token
+  });
+}
+
 export function fetchAllBookings(token) {
   return apiRequest('/api/bookings', { token });
 }
