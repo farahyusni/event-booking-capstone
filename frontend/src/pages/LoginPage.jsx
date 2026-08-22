@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useLocation, useNavigate, Link } from 'react-router';
+import { Navigate, useLocation, useNavigate, useSearchParams, Link } from 'react-router';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import LoadingMessage from '../components/LoadingMessage.jsx';
 import { useAuth } from '../context/useAuth.js';
@@ -12,8 +12,13 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const redirectTo = location.state?.from?.pathname || '/';
+  // Set by httpClient.js when a token-carrying request comes back 401 — see
+  // the comment there for why this can't be confused with a wrong password
+  // typed into this form (that never carries a token in the first place).
+  const sessionExpired = searchParams.get('sessionExpired') === '1';
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
@@ -37,6 +42,10 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <h1>Login</h1>
+
+      {sessionExpired && (
+        <p className="message error-message">Your session has timed out. Please log in again.</p>
+      )}
 
       <form onSubmit={handleSubmit} className="auth-form">
         <label>

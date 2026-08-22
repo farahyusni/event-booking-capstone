@@ -23,16 +23,20 @@ export async function apiRequest(path, options = {}) {
   const responseBody = contentType.includes('application/json') ? await response.json() : null;
 
   if (!response.ok) {
-    // A 401 here means the token itself is missing/expired/invalid (Spring
-    // Security rejects it before the request even reaches a controller, so
-    // there's rarely a JSON body to read a message from). AuthContext only
-    // checks "is there a token in localStorage", not "is it still valid", so
-    // without this the app would otherwise sit on a stale session showing
-    // cryptic "Request failed with status 401" errors on every call.
-    if (response.status === 401) {
+    // A 401 on a request that carried a token means the token itself is
+    // missing/expired/invalid (Spring Security rejects it before the request
+    // even reaches a controller). AuthContext only checks "is there a token
+    // in localStorage", not "is it still valid", so without this the app
+    // would sit on a stale session showing cryptic "Request failed with
+    // status 401" errors on every call instead of sending the user back to
+    // log in. Gated on `token` specifically — not just "any 401" — because
+    // the login endpoint itself also returns 401 for a wrong password, and
+    // that's a normal, expected error the login form already shows inline,
+    // not a session timeout.
+    if (response.status === 401 && token) {
       localStorage.removeItem(AUTH_STORAGE_KEY);
       if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-        window.location.assign('/login');
+        window.location.assign('/login?sessionExpired=1');
       }
     }
 
