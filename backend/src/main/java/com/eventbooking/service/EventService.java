@@ -1,8 +1,12 @@
 package com.eventbooking.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -28,23 +32,48 @@ public class EventService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public Page<Event> getEvents(String category, String keyword, Pageable pageable) {  // filter/search/plain-list from the repository
-        boolean hasCategory = category != null && !category.isBlank();
-        boolean hasKeyword = keyword != null && !keyword.isBlank();
+    /**
+     * Filter + search + sort + paginate, all done by MongoDB.
+     *
+     * Built with MongoTemplate rather than derived repository methods because the
+     * conditions are optional and independent: with 4 of them, derived methods would
+     * need one findBy... signature per combination. Composing Criteria keeps it to one
+     * query no matter which filters the caller supplies.
+     *
+     * includeInactive=false (the customer view) hides cancelled events and events whose
+     * date has passed — a customer browsing should only see what they can actually book.
+     * The admin list passes true so it can manage the full catalogue. EventController
+     * decides that flag from the caller's role, never from the raw request.
+     */
+    public Page<Event> getEvents(String category, String keyword, boolean includeInactive, Pageable pageable) {
+        List<Criteria> conditions = new ArrayList<>();
 
-        if (hasCategory && hasKeyword) {
-            return eventRepository.findByCategoryIgnoreCaseAndTitleContainingIgnoreCase(category, keyword, pageable);
+        // Pattern.quote() so a search like "a.*b" is treated as literal text rather than
+        // being executed as a regex against every title.
+        if (category != null && !category.isBlank()) {
+            conditions.add(Criteria.where("category").regex("^" + Pattern.quote(category.trim()) + "$", "i"));
         }
 
-        if(hasCategory) {
-            return eventRepository.findByCategoryIgnoreCase(category, pageable);
+        if (keyword != null && !keyword.isBlank()) {
+            conditions.add(Criteria.where("title").regex(Pattern.quote(keyword.trim()), "i"));
         }
 
-        if(hasKeyword) {
-            return eventRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+        if (!includeInactive) {
+            conditions.add(Criteria.where("cancelled").is(false));
+            conditions.add(Criteria.where("eventDate").gt(LocalDateTime.now()));
         }
 
-        return eventRepository.findAll(pageable);
+        Query query = new Query();
+        if (!conditions.isEmpty()) {
+            query.addCriteria(new Criteria().andOperator(conditions.toArray(new Criteria[0])));
+        }
+
+        // Count the whole matching set before applying skip/limit, otherwise the
+        // total that drives the pagination controls would only ever be one page.
+        long total = mongoTemplate.count(query, Event.class);
+        List<Event> events = mongoTemplate.find(query.with(pageable), Event.class);
+
+        return new PageImpl<>(events, pageable, total);
     }
 
     public Event getEventById(String id) {

@@ -5,6 +5,7 @@ import ErrorMessage from '../components/ErrorMessage.jsx';
 import LoadingMessage from '../components/LoadingMessage.jsx';
 import { createBookingRequest, fetchEventById } from '../services/api.js';
 import { useAuth } from '../context/useAuth.js';
+import { formatDateTime } from '../utils/formatDate.js';
 
 const initialState = { event: null, loading: true, error: '' };
 
@@ -119,7 +120,7 @@ export default function EventDetailsPage() {
           </div>
           <div>
             <dt>Date</dt>
-            <dd>{new Date(event.eventDate).toLocaleString()}</dd>
+            <dd>{formatDateTime(event.eventDate)}</dd>
           </div>
           <div>
             <dt>Price</dt>

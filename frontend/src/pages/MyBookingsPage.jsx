@@ -6,6 +6,7 @@ import ErrorMessage from '../components/ErrorMessage.jsx';
 import LoadingMessage from '../components/LoadingMessage.jsx';
 import { cancelBookingRequest, fetchEventById, fetchMyBookings } from '../services/api.js';
 import { useAuth } from '../context/useAuth.js';
+import { formatDateTime } from '../utils/formatDate.js';
 
 const initialState = { bookings: [], loading: true, error: '', cancellingId: '' };
 
@@ -98,7 +99,7 @@ export default function MyBookingsPage() {
               <strong>{booking.event?.title || 'Event no longer available'}</strong>
               <span>
                 {booking.seatsBooked} seat(s)
-                {booking.event ? ` · ${new Date(booking.event.eventDate).toLocaleString()}` : ''}
+                {booking.event ? ` · ${formatDateTime(booking.event.eventDate)}` : ''}
               </span>
               {/* An admin can cancel an event that already has bookings (a real
                   venue does exactly that). Existing bookings deliberately stay

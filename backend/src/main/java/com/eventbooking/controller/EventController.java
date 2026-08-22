@@ -45,12 +45,20 @@ public class EventController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "eventDate") String sortBy,
-        @RequestParam(defaultValue = "asc") String direction) {
+        @RequestParam(defaultValue = "asc") String direction,
+        @RequestParam(defaultValue = "false") boolean includeInactive,
+        @AuthenticationPrincipal Jwt jwt) {
+
+            // Cancelled and past events are admin-only. The role is read from the signed
+            // token, not from the request, so a customer passing includeInactive=true by
+            // hand still gets the filtered list.
+            boolean isAdmin = "ADMIN".equals(jwt.getClaimAsString("role"));
+            boolean showInactive = includeInactive && isAdmin;
 
             Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
             Pageable pageable = PageRequest.of(page, size, sort);
 
-            return eventService.getEvents(category, keyword, pageable);
+            return eventService.getEvents(category, keyword, showInactive, pageable);
     }
 
     @GetMapping("/{id}")

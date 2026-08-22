@@ -10,6 +10,7 @@ import PaginationControls from '../../components/PaginationControls.jsx';
 import { useAuth } from '../../context/useAuth.js';
 import { useEventData } from '../../context/useEventData.js';
 import { deactivateEventRequest, reactivateEventRequest } from '../../services/api.js';
+import { formatDateTime } from '../../utils/formatDate.js';
 
 // Reuses the same EventDataContext as the customer-facing EventsPage.jsx —
 // same search/filter/sort/pagination the brief asks for, just with admin
@@ -28,7 +29,9 @@ export default function AdminEventsPage() {
     }
 
     initialLoadRef.current = true;
-    loadEventsPage();
+    // The admin list manages the whole catalogue, so it asks for cancelled and
+    // past events too — the customer-facing EventsPage deliberately does not.
+    loadEventsPage({ includeInactive: true });
   }, [loadEventsPage]);
 
   // Takes the whole event (not just the id) so the confirmation can tell the
@@ -121,7 +124,7 @@ export default function AdminEventsPage() {
                 <div>
                   <strong>{event.title}</strong>
                   <span>
-                    {event.venue} &middot; {new Date(event.eventDate).toLocaleString()} &middot;{' '}
+                    {event.venue} &middot; {formatDateTime(event.eventDate)} &middot;{' '}
                     {event.seatsAvailable}/{event.capacity} seats
                   </span>
                   <span>{event.cancelled ? 'Cancelled' : 'Active'} &middot; RM {event.price.toFixed(2)}</span>

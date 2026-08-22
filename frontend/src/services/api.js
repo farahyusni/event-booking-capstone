@@ -23,7 +23,9 @@ export function fetchPagedEvents(token, params) {
     page: params.page,
     size: params.size,
     sortBy: params.sortBy,
-    direction: params.direction
+    direction: params.direction,
+    // buildQueryString drops empty values, so only send this when it's actually on
+    includeInactive: params.includeInactive ? 'true' : ''
   });
 
   return apiRequest(`/api/events?${queryString}`, { token });

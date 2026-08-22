@@ -20,7 +20,10 @@ export default function EventsPage() {
     }
 
     initialLoadRef.current = true;
-    loadEventsPage();
+    // Passed explicitly rather than relying on the default: EventDataContext is
+    // shared with AdminEventsPage, so if an admin visited there first the flag
+    // would still be true when they come back to the customer list.
+    loadEventsPage({ includeInactive: false });
   }, [loadEventsPage]);
 
   return (

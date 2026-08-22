@@ -208,6 +208,17 @@ textarea {
   opacity: 0.7;
 }
 
+/* Both need the .event-row prefix to out-specify `.event-row span` above. */
+.event-row .seats-left {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #667085;
+}
+
+.event-row .seats-left.sold-out {
+  color: #991b1b;
+}
+
 .event-row-side {
   display: flex;
   align-items: center;

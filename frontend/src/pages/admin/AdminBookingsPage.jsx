@@ -5,6 +5,7 @@ import ErrorMessage from '../../components/ErrorMessage.jsx';
 import LoadingMessage from '../../components/LoadingMessage.jsx';
 import { useAuth } from '../../context/useAuth.js';
 import { fetchAllBookings, fetchEventById, fetchUserById } from '../../services/api.js';
+import { formatDateTime } from '../../utils/formatDate.js';
 
 const initialState = { bookings: [], loading: true, error: '' };
 
@@ -88,7 +89,7 @@ export default function AdminBookingsPage() {
             <div>
               <strong>{booking.event?.title || 'Event no longer available'}</strong>
               <span>
-                {booking.seatsBooked} seat(s) &middot; booked {new Date(booking.bookedAt).toLocaleString()}
+                {booking.seatsBooked} seat(s) &middot; booked {formatDateTime(booking.bookedAt)}
               </span>
               {/* Falls back to the raw id if the user lookup failed, so the
                   row still identifies the booking rather than showing nothing. */}

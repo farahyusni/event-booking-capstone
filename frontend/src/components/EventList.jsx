@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import CategoryBadge from './CategoryBadge.jsx';
 import EmptyState from './EmptyState.jsx';
+import { formatDateTime } from '../utils/formatDate.js';
 
 // Each row links to its own details route (/events/:id) rather than the
 // instructor template's click-to-select side panel — the brief asks for the
@@ -26,7 +27,17 @@ export default function EventList({ events }) {
           >
             <div>
               <strong>{event.title}</strong>
-              <span>{event.venue} · {new Date(event.eventDate).toLocaleString()}</span>
+              <span>{event.venue} · {formatDateTime(event.eventDate)}</span>
+
+              {/* Sold-out events stay listed rather than being filtered out like
+                  cancelled/past ones: a cancelled booking calls releaseSeats() and
+                  puts a seat straight back, so "full" is temporary. Showing it here
+                  means nobody clicks through only to find a disabled button. */}
+              <span className={event.seatsAvailable === 0 ? 'seats-left sold-out' : 'seats-left'}>
+                {event.seatsAvailable === 0
+                  ? 'Sold out'
+                  : `${event.seatsAvailable} seat${event.seatsAvailable === 1 ? '' : 's'} left`}
+              </span>
             </div>
 
             {/* Price shown here because it's sortable in DataControls — sorting by a

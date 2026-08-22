@@ -12,7 +12,11 @@ const initialState = {
   error: '',
   filters: {
     category: '',
-    keyword: ''
+    keyword: '',
+    // Customer pages leave this false so cancelled/past events are hidden.
+    // AdminEventsPage passes true. The backend still checks the caller's role
+    // before honouring it, so this is a view preference, not a permission.
+    includeInactive: false
   },
   pageInfo: {
     page: 0,
@@ -71,7 +75,8 @@ export function EventDataProvider({ children }) {
   const loadEventsPage = useCallback(async (overrides = {}) => {
     const filters = {
       category: overrides.category ?? state.filters.category,
-      keyword: overrides.keyword ?? state.filters.keyword
+      keyword: overrides.keyword ?? state.filters.keyword,
+      includeInactive: overrides.includeInactive ?? state.filters.includeInactive
     };
 
     const params = {
