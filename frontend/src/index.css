@@ -1,53 +1,66 @@
 /* ==========================================================================
    Design tokens + base styles. Component styles live in App.css.
-   Everything is driven from the custom properties below, so the whole palette
-   or spacing rhythm can be retuned from this one block.
+
+   Palette: deep navy as the structural ink, burgundy as the single action
+   colour, warm beige as the ground, and brass reserved for small accents.
+   Nothing is pure black or pure white — every neutral carries a little warmth,
+   which is most of what separates a rich palette from a flat one.
    ========================================================================== */
 
 :root {
-  /* Surfaces — warm-neutral rather than pure grey, so white cards read as
-     deliberately lifted off the page instead of blending into it. */
-  --bg: #FAFAF9;
-  --surface: #FFFFFF;
-  --surface-2: #F5F5F4;
+  /* Surfaces — beige ground with a warm off-white card, so cards read as
+     paper laid on a surface rather than holes cut out of it. */
+  --bg: #F2EBE0;
+  --surface: #FCFAF6;
+  --surface-2: #EBE3D5;
 
-  /* Text */
-  --ink: #1C1917;
-  --ink-2: #57534E;
-  --ink-3: #A8A29E;
+  /* Ink — deep navy rather than black; softer on a warm ground */
+  --ink: #16233A;
+  --ink-2: #4A5568;
+  /* Warm taupe rather than a lighter grey: at 12–13px this is body text, so it
+     has to clear WCAG AA 4.5:1 on the card surface, not just look secondary. */
+  --ink-3: #7A7264;
 
-  /* Lines */
-  --line: #E7E5E4;
-  --line-2: #F0EFEE;
+  /* Lines — beige-tinted, never grey */
+  --line: #DCD2C0;
+  --line-2: #E8E1D4;
 
-  /* One accent, used sparingly — primary buttons, active nav, focus rings. */
-  --accent: #4F46E5;
-  --accent-hover: #4338CA;
-  --accent-soft: #EEF2FF;
-  --accent-line: #C7D2FE;
+  /* Burgundy: the single action colour — primary buttons, links, focus */
+  --accent: #7A2231;
+  --accent-hover: #5C1824;
+  --accent-soft: #F5EAEA;
+  --accent-line: #E0C4C6;
 
-  /* Semantic colours, kept separate from the accent */
-  --ok: #15803D;
-  --ok-soft: #F0FDF4;
-  --ok-line: #BBF7D0;
-  --warn: #B45309;
-  --warn-soft: #FFFBEB;
-  --bad: #DC2626;
-  --bad-soft: #FEF2F2;
-  --bad-line: #FECACA;
+  /* Brass: accents only — hairlines, borders, active markers. Never a large
+     fill; gold reads cheap the moment it covers area.
+     --gold is the decorative tone (borders, rules, where contrast is moot);
+     --gold-ink is the darker one used whenever gold carries actual TEXT, since
+     the decorative tone only reaches ~3:1 on beige and would fail AA. */
+  --gold: #A8823C;
+  --gold-ink: #7D5F27;
+  --gold-soft: #F0E6D2;
 
-  /* Radii */
-  --r-sm: 8px;
-  --r: 12px;
-  --r-lg: 16px;
+  /* Semantic colours, warmed to sit inside the palette */
+  --ok: #3F6B4A;
+  --ok-soft: #E8EFE7;
+  --ok-line: #C3D6C3;
+  --warn: #8A6224;
+  --bad: #9B2C2C;
+  --bad-soft: #F7E9E7;
+  --bad-line: #E3C3BF;
+
+  /* Sharper radii than a typical web app — restraint reads as premium */
+  --r-sm: 5px;
+  --r: 8px;
+  --r-lg: 12px;
   --r-pill: 999px;
 
-  /* Shadows — deliberately light. Depth comes from borders, not drop shadows. */
-  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
-  --shadow: 0 1px 3px rgba(28, 25, 23, 0.05), 0 12px 32px -16px rgba(28, 25, 23, 0.18);
-  --shadow-lg: 0 24px 60px -20px rgba(28, 25, 23, 0.28);
+  --shadow-sm: 0 1px 2px rgba(22, 35, 58, 0.04);
+  --shadow: 0 1px 2px rgba(22, 35, 58, 0.04), 0 14px 34px -18px rgba(22, 35, 58, 0.22);
+  --shadow-lg: 0 30px 70px -24px rgba(22, 35, 58, 0.4);
 
-  --font: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --font: 'Jost', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   font-family: var(--font);
   color: var(--ink);
@@ -66,15 +79,19 @@ body {
   min-height: 100vh;
   background: var(--bg);
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
+/* Headings carry the serif; everything else stays in the sans so the page
+   remains a working interface rather than a brochure. */
 h1,
 h2,
 h3 {
   margin: 0;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.2;
   color: var(--ink);
   text-wrap: balance;
 }
@@ -90,6 +107,7 @@ a {
 
 a:hover {
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 button,
@@ -104,7 +122,6 @@ button {
   cursor: pointer;
 }
 
-/* One consistent focus treatment across every interactive element */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

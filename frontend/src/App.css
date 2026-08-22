@@ -1,6 +1,6 @@
 /* ==========================================================================
    Component styles. Tokens and base element styles live in index.css.
-   Sections below follow the order a user meets them: shell → cards → forms →
+   Sections follow the order a user meets them: shell → cards → forms →
    lists → feedback → auth → modal.
    ========================================================================== */
 
@@ -8,32 +8,31 @@
 .app-shell {
   width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 0 0 80px;
+  padding: 0 0 88px;
 }
 
-/* Light header with a hairline rule instead of a heavy dark slab — the page
-   should feel like paper, with the content carrying the weight. */
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 28px 0 22px;
+  padding: 32px 0 24px;
   border-bottom: 1px solid var(--line);
 }
 
 .app-header h1 {
-  font-size: 21px;
-  font-weight: 700;
+  font-size: 30px;
+  font-weight: 600;
 }
 
+/* Brass, uppercase, widely tracked — the one place gold appears as type */
 .eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: 6px;
+  color: var(--gold-ink);
+  margin-bottom: 7px;
 }
 
 .user-panel {
@@ -44,66 +43,70 @@
 }
 
 .user-panel span {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink-2);
 }
 
 /* Role chip */
 .user-panel strong {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 4px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
   border-radius: var(--r-pill);
-  background: var(--accent-soft);
-  color: var(--accent);
-  border: 1px solid var(--accent-line);
+  background: var(--gold-soft);
+  color: var(--gold-ink);
+  border: 1px solid rgba(168, 130, 60, 0.35);
 }
 
 .user-panel button {
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: transparent;
   color: var(--ink-2);
-  font-size: 13.5px;
-  font-weight: 600;
-  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 15px;
   border-radius: var(--r-sm);
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
 }
 
 .user-panel button:hover {
-  border-color: var(--ink-3);
-  color: var(--ink);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ---------- Navigation ---------- */
 .app-nav {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   flex-wrap: wrap;
-  margin: 18px 0 28px;
+  margin: 20px 0 30px;
 }
 
 .app-nav a {
-  font-size: 14px;
-  font-weight: 600;
+  position: relative;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-2);
-  padding: 8px 14px;
+  padding: 9px 16px;
   border-radius: var(--r-sm);
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.18s, background 0.18s;
 }
 
 .app-nav a:hover {
-  background: var(--surface-2);
   color: var(--ink);
+  background: var(--surface-2);
   text-decoration: none;
 }
 
-/* react-router's NavLink sets .active on the matching route */
+/* Active route: burgundy fill, the same colour as a primary action */
 .app-nav a.active {
-  background: var(--ink);
-  color: var(--surface);
+  background: var(--accent);
+  color: #FCFAF6;
 }
 
 main {
@@ -118,17 +121,16 @@ main {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  padding: 22px 24px;
+  padding: 26px 28px;
 }
 
 .section-heading {
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .section-heading h2 {
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 23px;
+  margin-bottom: 5px;
 }
 
 .section-heading p {
@@ -145,9 +147,8 @@ main {
 }
 
 .welcome-card h2 {
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 23px;
+  margin-bottom: 5px;
 }
 
 .welcome-card p {
@@ -160,7 +161,7 @@ main {
   gap: 10px;
   flex-wrap: wrap;
   align-items: flex-end;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .action-row:first-child {
@@ -175,21 +176,23 @@ main {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 9px 16px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 18px;
   border-radius: var(--r-sm);
   border: 1px solid transparent;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
 }
 
 .btn-solid,
 .button-link,
 .auth-form button {
   background: var(--accent);
-  color: #fff;
+  color: #FCFAF6;
 }
 
 .btn-solid:hover,
@@ -199,35 +202,37 @@ main {
   text-decoration: none;
 }
 
-/* Secondary / ghost — quieter actions sitting next to a primary one */
+/* Quieter actions sitting beside a primary one */
 .btn-ghost,
 .button-link.secondary {
-  background: var(--surface);
+  background: transparent;
   border-color: var(--line);
   color: var(--ink-2);
 }
 
 .btn-ghost:hover,
 .button-link.secondary:hover {
-  border-color: var(--ink-3);
+  border-color: var(--ink);
   color: var(--ink);
-  background: var(--surface);
+  background: transparent;
   text-decoration: none;
 }
 
 button:disabled,
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 /* ---------- Forms ---------- */
 label {
   display: grid;
-  gap: 7px;
-  font-size: 13px;
+  gap: 8px;
+  font-size: 10.5px;
   font-weight: 600;
-  color: var(--ink-2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
 input,
@@ -236,18 +241,19 @@ textarea {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
-  padding: 10px 12px;
+  padding: 11px 13px;
   background: var(--surface);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--ink);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.18s, box-shadow 0.18s;
 }
 
 input::placeholder,
 textarea::placeholder {
   color: var(--ink-3);
-  font-weight: 400;
 }
 
 input:focus,
@@ -260,13 +266,13 @@ textarea:focus {
 
 textarea {
   resize: vertical;
-  min-height: 84px;
+  min-height: 88px;
 }
 
 .filter-panel {
   display: grid;
   grid-template-columns: 1fr 240px;
-  gap: 16px;
+  gap: 18px;
 }
 
 /* ---------- Event list ---------- */
@@ -280,13 +286,13 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 15px 16px;
+  padding: 16px 18px;
   border: 1px solid var(--line);
   border-radius: var(--r);
   background: var(--surface);
   color: inherit;
   text-decoration: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.18s, background 0.18s;
 }
 
 a.event-row:hover {
@@ -297,9 +303,9 @@ a.event-row:hover {
 
 .event-row strong {
   display: block;
-  font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 600;
 }
 
 .event-row span {
@@ -310,31 +316,33 @@ a.event-row:hover {
 }
 
 .event-row.cancelled {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
-/* Prefixed to out-specify `.event-row span` above */
+/* Prefixed to out-specify `.event-row span` */
 .event-row .seats-left {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink-2);
 }
 
 .event-row .seats-left.sold-out {
   color: var(--bad);
+  font-weight: 600;
 }
 
 .event-row-side {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex: none;
 }
 
 .event-row .event-price {
   display: inline;
   margin: 0;
-  font-size: 14px;
-  font-weight: 700;
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -343,10 +351,11 @@ a.event-row:hover {
 .category-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  padding: 4px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 11px;
   border-radius: var(--r-pill);
   background: var(--surface-2);
   color: var(--ink-2);
@@ -361,11 +370,11 @@ a.event-row:hover {
 }
 
 .detail-list div {
-  padding: 13px 0;
+  padding: 15px 0;
   border-bottom: 1px solid var(--line-2);
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 16px;
+  grid-template-columns: 160px 1fr;
+  gap: 20px;
   align-items: baseline;
 }
 
@@ -375,15 +384,17 @@ a.event-row:hover {
 }
 
 dt {
-  font-size: 12.5px;
+  font-size: 10.5px;
   font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--ink-3);
 }
 
 dd {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -398,7 +409,7 @@ dd {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 15px 16px;
+  padding: 16px 18px;
   border: 1px solid var(--line);
   border-radius: var(--r);
   background: var(--surface);
@@ -406,8 +417,9 @@ dd {
 
 .booking-row strong {
   display: block;
-  font-size: 14.5px;
-  font-weight: 700;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 600;
 }
 
 .booking-row span {
@@ -419,14 +431,16 @@ dd {
 
 .booking-row a {
   display: inline-block;
-  margin-top: 6px;
-  font-size: 12.5px;
-  font-weight: 600;
+  margin-top: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* Prefixed to out-specify `.booking-row span` */
 .booking-row .cancelled-notice {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--bad);
 }
 
@@ -434,7 +448,7 @@ dd {
 .admin-row-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
   flex: none;
 }
@@ -442,10 +456,10 @@ dd {
 .status-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 4px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  padding: 5px 11px;
   border-radius: var(--r-pill);
   border: 1px solid transparent;
   white-space: nowrap;
@@ -467,24 +481,24 @@ dd {
 .report-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13.5px;
+  font-size: 14px;
 }
 
 .report-table th {
   text-align: left;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-3);
-  padding: 0 14px 10px 0;
-  border-bottom: 1px solid var(--line);
+  padding: 0 16px 11px 0;
+  border-bottom: 1px solid var(--ink);
 }
 
 .report-table td {
-  padding: 12px 14px 12px 0;
+  padding: 14px 16px 14px 0;
   border-bottom: 1px solid var(--line-2);
-  font-weight: 600;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
@@ -495,10 +509,9 @@ dd {
 /* ---------- Feedback ---------- */
 .message {
   margin: 0;
-  padding: 11px 14px;
+  padding: 12px 15px;
   border-radius: var(--r-sm);
   font-size: 13.5px;
-  font-weight: 500;
   border: 1px solid transparent;
 }
 
@@ -521,42 +534,42 @@ dd {
 
 .empty-state {
   color: var(--ink-3);
-  font-size: 13.5px;
+  font-size: 14px;
   text-align: center;
-  padding: 36px 24px;
+  padding: 44px 24px;
 }
 
 /* ---------- Auth pages ---------- */
 .auth-page {
-  width: min(400px, calc(100% - 40px));
-  margin: 72px auto;
+  width: min(420px, calc(100% - 40px));
+  margin: 76px auto;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  padding: 32px;
+  padding: 40px 36px;
   box-shadow: var(--shadow);
 }
 
 .auth-page h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 34px;
+  text-align: center;
+  margin-bottom: 6px;
 }
 
 .auth-form {
   display: grid;
-  gap: 16px;
-  margin: 24px 0 20px;
+  gap: 18px;
+  margin: 26px 0 22px;
 }
 
 .auth-form button {
   width: 100%;
-  padding: 11px 16px;
-  margin-top: 4px;
+  padding: 12px 18px;
+  margin-top: 6px;
 }
 
 .auth-page > p {
-  font-size: 13.5px;
+  font-size: 13px;
   color: var(--ink-3);
   text-align: center;
 }
@@ -564,22 +577,23 @@ dd {
 .login-help {
   display: grid;
   gap: 3px;
-  padding: 14px 16px;
-  margin-bottom: 18px;
-  border: 1px dashed var(--line);
-  border-radius: var(--r);
-  background: var(--surface-2);
+  padding: 15px 17px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--gold);
+  border-radius: var(--r-sm);
+  background: var(--gold-soft);
   font-size: 12.5px;
   color: var(--ink-2);
   font-variant-numeric: tabular-nums;
 }
 
 .login-help strong {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--gold-ink);
   margin-bottom: 3px;
 }
 
@@ -587,25 +601,25 @@ dd {
 /* Replaces window.confirm, which renders as an OS-level "localhost says…" box
    outside the page's design entirely. */
 .modal {
-  width: min(440px, calc(100vw - 40px));
+  width: min(450px, calc(100vw - 40px));
   padding: 0;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   background: var(--surface);
   color: var(--ink);
   box-shadow: var(--shadow-lg);
-  animation: modal-in 0.16s ease-out;
+  animation: modal-in 0.18s ease-out;
 }
 
 .modal::backdrop {
-  background: rgba(28, 25, 23, 0.4);
-  animation: fade-in 0.16s ease-out;
+  background: rgba(22, 35, 58, 0.55);
+  animation: fade-in 0.18s ease-out;
 }
 
 @keyframes modal-in {
   from {
     opacity: 0;
-    transform: translateY(6px) scale(0.98);
+    transform: translateY(8px) scale(0.98);
   }
 }
 
@@ -616,40 +630,39 @@ dd {
 }
 
 .modal-body {
-  padding: 24px 24px 20px;
+  padding: 28px 28px 22px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .modal-body h2 {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 25px;
 }
 
 .modal-body p {
   font-size: 13.5px;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--ink-2);
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 16px 24px;
+  gap: 10px;
+  padding: 18px 28px;
   border-top: 1px solid var(--line-2);
   background: var(--surface-2);
   border-radius: 0 0 var(--r-lg) var(--r-lg);
 }
 
-/* Tone colours the confirming button only — the cancel button stays neutral
-   so the safe choice never competes for attention. */
+/* Tone colours the confirming button only — the safe option stays neutral so
+   it never competes for attention. */
 .modal-danger .btn-solid {
   background: var(--bad);
 }
 
 .modal-danger .btn-solid:hover {
-  background: #B91C1C;
+  background: #7F2222;
 }
 
 .modal-warn .btn-solid {
@@ -657,7 +670,7 @@ dd {
 }
 
 .modal-warn .btn-solid:hover {
-  background: #92400E;
+  background: #6E4D1B;
 }
 
 /* ---------- Responsive ---------- */
@@ -680,7 +693,7 @@ dd {
 
   .detail-list div {
     grid-template-columns: 1fr;
-    gap: 4px;
+    gap: 5px;
   }
 
   .modal-actions {
