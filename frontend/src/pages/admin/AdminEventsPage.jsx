@@ -124,7 +124,7 @@ export default function AdminEventsPage() {
                     {event.venue} &middot; {new Date(event.eventDate).toLocaleString()} &middot;{' '}
                     {event.seatsAvailable}/{event.capacity} seats
                   </span>
-                  <span>{event.cancelled ? 'Cancelled' : 'Active'} &middot; RM {event.price}</span>
+                  <span>{event.cancelled ? 'Cancelled' : 'Active'} &middot; RM {event.price.toFixed(2)}</span>
                 </div>
 
                 <div className="admin-row-actions">

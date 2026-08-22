@@ -123,7 +123,7 @@ export default function EventDetailsPage() {
           </div>
           <div>
             <dt>Price</dt>
-            <dd>{event.price === 0 ? 'Free' : `RM ${event.price}`}</dd>
+            <dd>{event.price === 0 ? 'Free' : `RM ${event.price.toFixed(2)}`}</dd>
           </div>
           <div>
             <dt>Seats available</dt>

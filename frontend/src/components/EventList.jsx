@@ -28,7 +28,16 @@ export default function EventList({ events }) {
               <strong>{event.title}</strong>
               <span>{event.venue} · {new Date(event.eventDate).toLocaleString()}</span>
             </div>
-            <CategoryBadge category={event.category} />
+
+            {/* Price shown here because it's sortable in DataControls — sorting by a
+                value the row never displays gives the user no visible feedback.
+                "Free" wording matches EventDetailsPage so the two pages agree. */}
+            <div className="event-row-side">
+              <span className="event-price">
+                {event.price === 0 ? 'Free' : `RM ${event.price.toFixed(2)}`}
+              </span>
+              <CategoryBadge category={event.category} />
+            </div>
           </Link>
         ))}
       </div>
