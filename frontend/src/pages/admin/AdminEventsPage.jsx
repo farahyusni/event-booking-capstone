@@ -31,16 +31,33 @@ export default function AdminEventsPage() {
     loadEventsPage();
   }, [loadEventsPage]);
 
-  async function handleDeactivate(eventId) {
-    if (!window.confirm('Deactivate this event? Existing bookings are kept, but no new bookings can be made.')) {
+  // Takes the whole event (not just the id) so the confirmation can tell the
+  // admin how many customers they're about to affect.
+  async function handleDeactivate(event) {
+    // Same derivation EventService.updateEvent uses on the backend. Cancelled
+    // bookings release their seats (releaseSeats), so this only ever counts
+    // seats that are still actively held.
+    const bookedSeats = event.capacity - event.seatsAvailable;
+
+    const message =
+      bookedSeats > 0
+        ? `"${event.title}" already has ${bookedSeats} seat(s) booked by customers.\n\n` +
+          'Deactivating stops any NEW bookings. Existing bookings are kept and those ' +
+          'customers keep their seats — they will see a note that the event was cancelled.\n\n' +
+          'You can reactivate this event later.\n\nAre you sure?'
+        : `Deactivate "${event.title}"?\n\n` +
+          'No seats are booked yet. No new bookings can be made after this, ' +
+          'but you can reactivate it later.';
+
+    if (!window.confirm(message)) {
       return;
     }
 
-    setDeactivatingId(eventId);
+    setDeactivatingId(event.id);
     setActionError('');
 
     try {
-      await deactivateEventRequest(token, eventId);
+      await deactivateEventRequest(token, event.id);
       await loadEventsPage({ page: pageInfo.page });
     } catch (err) {
       setActionError(err.message || 'Could not deactivate this event.');
@@ -127,7 +144,7 @@ export default function AdminEventsPage() {
                       type="button"
                       className="button-link secondary"
                       disabled={deactivatingId === event.id}
-                      onClick={() => handleDeactivate(event.id)}
+                      onClick={() => handleDeactivate(event)}
                     >
                       {deactivatingId === event.id ? 'Deactivating...' : 'Deactivate'}
                     </button>

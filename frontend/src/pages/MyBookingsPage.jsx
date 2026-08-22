@@ -100,6 +100,14 @@ export default function MyBookingsPage() {
                 {booking.seatsBooked} seat(s)
                 {booking.event ? ` · ${new Date(booking.event.eventDate).toLocaleString()}` : ''}
               </span>
+              {/* An admin can cancel an event that already has bookings (a real
+                  venue does exactly that). Existing bookings deliberately stay
+                  CONFIRMED rather than being cascade-cancelled — see the note in
+                  EventService.deactivateEvent — so surface it here, otherwise the
+                  customer just sees "CONFIRMED" for an event that isn't happening. */}
+              {booking.event?.cancelled && booking.status === 'CONFIRMED' && (
+                <span className="cancelled-notice">This event was cancelled by the organiser.</span>
+              )}
               {booking.event && <Link to={`/events/${booking.eventId}`}>View event</Link>}
             </div>
 

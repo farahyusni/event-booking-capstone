@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useReducer } from 'react';
-import { Link } from 'react-router';
 import BookingStatusBadge from '../../components/BookingStatusBadge.jsx';
 import EmptyState from '../../components/EmptyState.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
 import LoadingMessage from '../../components/LoadingMessage.jsx';
 import { useAuth } from '../../context/useAuth.js';
-import { fetchAllBookings, fetchEventById } from '../../services/api.js';
+import { fetchAllBookings, fetchEventById, fetchUserById } from '../../services/api.js';
 
 const initialState = { bookings: [], loading: true, error: '' };
 
@@ -22,18 +21,31 @@ function reducer(state, action) {
   }
 }
 
-// Booking documents only store eventId (see Booking.java), same trade-off as
-// MyBookingsPage.jsx — fetch each referenced event once and attach it, deduped.
-async function attachEventDetails(bookings, token) {
+// Booking documents only store eventId and userId (see Booking.java) — no
+// event title, no customer name. So resolve both here: dedupe the ids, fetch
+// each referenced event and user exactly once, then attach them back onto
+// every booking that references them.
+//
+// Each fetch falls back to null on failure rather than rejecting the whole
+// batch, so one deleted event or user degrades that single row instead of
+// blanking the entire page.
+async function attachBookingDetails(bookings, token) {
   const uniqueEventIds = [...new Set(bookings.map((b) => b.eventId))];
+  const uniqueUserIds = [...new Set(bookings.map((b) => b.userId))];
 
-  const events = await Promise.all(
-    uniqueEventIds.map((id) => fetchEventById(id, token).catch(() => null))
-  );
+  const [events, users] = await Promise.all([
+    Promise.all(uniqueEventIds.map((id) => fetchEventById(id, token).catch(() => null))),
+    Promise.all(uniqueUserIds.map((id) => fetchUserById(id, token).catch(() => null)))
+  ]);
 
   const eventsById = Object.fromEntries(uniqueEventIds.map((id, index) => [id, events[index]]));
+  const usersById = Object.fromEntries(uniqueUserIds.map((id, index) => [id, users[index]]));
 
-  return bookings.map((booking) => ({ ...booking, event: eventsById[booking.eventId] }));
+  return bookings.map((booking) => ({
+    ...booking,
+    event: eventsById[booking.eventId],
+    user: usersById[booking.userId]
+  }));
 }
 
 export default function AdminBookingsPage() {
@@ -46,7 +58,7 @@ export default function AdminBookingsPage() {
 
     try {
       const rawBookings = await fetchAllBookings(token);
-      const enriched = await attachEventDetails(rawBookings, token);
+      const enriched = await attachBookingDetails(rawBookings, token);
       enriched.sort((a, b) => new Date(b.bookedAt) - new Date(a.bookedAt));
       dispatch({ type: 'FETCH_SUCCESS', bookings: enriched });
     } catch (err) {
@@ -78,8 +90,13 @@ export default function AdminBookingsPage() {
               <span>
                 {booking.seatsBooked} seat(s) &middot; booked {new Date(booking.bookedAt).toLocaleString()}
               </span>
-              <span>User ID: {booking.userId}</span>
-              {booking.event && <Link to={`/events/${booking.eventId}`}>View event</Link>}
+              {/* Falls back to the raw id if the user lookup failed, so the
+                  row still identifies the booking rather than showing nothing. */}
+              <span>
+                {booking.user
+                  ? `${booking.user.name} (${booking.user.email})`
+                  : `User ID: ${booking.userId}`}
+              </span>
             </div>
 
             <BookingStatusBadge status={booking.status} />

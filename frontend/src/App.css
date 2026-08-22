@@ -333,6 +333,16 @@ button:disabled {
   margin-top: 4px;
 }
 
+/* Needs the .booking-row prefix to out-specify `.booking-row span` above,
+   which would otherwise force this back to the muted grey. */
+.booking-row .cancelled-notice {
+  display: block;
+  margin-top: 6px;
+  color: #991b1b;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
 .booking-row-actions {
   display: flex;
   align-items: center;

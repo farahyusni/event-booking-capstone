@@ -88,6 +88,12 @@ export function fetchAllBookings(token) {
   return apiRequest('/api/bookings', { token });
 }
 
+// Resolves a booking's stored userId into a name/email for the admin view.
+// Returns a UserResponse DTO, never the raw User (no password hash).
+export function fetchUserById(id, token) {
+  return apiRequest(`/api/users/${id}`, { token });
+}
+
 export function fetchBookingsPerEventReport(token) {
   return apiRequest('/api/reports/bookings-per-event', { token });
 }
