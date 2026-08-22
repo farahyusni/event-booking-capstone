@@ -66,6 +66,16 @@ export default function LoginPage() {
         </button>
       </form>
 
+      {/* Demo affordance so a marker can reach the admin pages without seeding an
+          account by hand. This would never ship in a real system — credentials on
+          a public login screen. Registration always creates CUSTOMER (AuthService),
+          so this is the only way in to the admin views. */}
+      <div className="login-help">
+        <strong>Demo admin account</strong>
+        <span>Email: admin@gmail.com</span>
+        <span>Password: abc12345</span>
+      </div>
+
       <p>No account yet? <Link to="/register">Register</Link></p>
     </div>
   );

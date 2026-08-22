@@ -318,6 +318,24 @@ dd {
   justify-self: start;
 }
 
+/* Demo credentials hint on the login page */
+.login-help {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px dashed #ccd6e3;
+  border-radius: 12px;
+  background: #f7f9fc;
+  display: grid;
+  gap: 3px;
+  font-size: 0.9rem;
+  color: #667085;
+}
+
+.login-help strong {
+  color: #344054;
+  margin-bottom: 3px;
+}
+
 @media (max-width: 860px) {
   .app-header,
   .welcome-card {

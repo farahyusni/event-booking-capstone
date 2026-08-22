@@ -69,13 +69,27 @@ export default function MyBookingsPage() {
     loadBookings();
   }, [loadBookings]);
 
-  async function handleCancel(bookingId) {
-    dispatch({ type: 'CANCEL_START', id: bookingId });
+  // Takes the whole booking (not just the id) so the confirmation can name the
+  // event and the seat count the customer is about to give up.
+  async function handleCancel(booking) {
+    // Confirmed here because this is genuinely irreversible: BookingService has no
+    // un-cancel, and cancelBooking() calls releaseSeats(), so the seats go straight
+    // back on sale — on a nearly-full event somebody else can take them at once.
+    const eventTitle = booking.event?.title || 'this event';
+    const message =
+      `Cancel your booking of ${booking.seatsBooked} seat(s) for "${eventTitle}"?\n\n` +
+      'This cannot be undone. The seats go back on sale immediately, so they may ' +
+      'be taken by someone else — you would have to book again and might not get them.';
+
+    if (!window.confirm(message)) {
+      return;
+    }
+
+    dispatch({ type: 'CANCEL_START', id: booking.id });
 
     try {
-      const updated = await cancelBookingRequest(bookingId, token);
-      const event = bookings.find((b) => b.id === bookingId)?.event;
-      dispatch({ type: 'CANCEL_SUCCESS', booking: { ...updated, event } });
+      const updated = await cancelBookingRequest(booking.id, token);
+      dispatch({ type: 'CANCEL_SUCCESS', booking: { ...updated, event: booking.event } });
     } catch (err) {
       dispatch({ type: 'CANCEL_ERROR', message: err.message || 'Could not cancel this booking.' });
     }
@@ -119,7 +133,7 @@ export default function MyBookingsPage() {
                   type="button"
                   className="button-link secondary"
                   disabled={cancellingId === booking.id}
-                  onClick={() => handleCancel(booking.id)}
+                  onClick={() => handleCancel(booking)}
                 >
                   {cancellingId === booking.id ? 'Cancelling...' : 'Cancel'}
                 </button>
