@@ -6,6 +6,7 @@ import ErrorMessage from '../components/ErrorMessage.jsx';
 import LoadingMessage from '../components/LoadingMessage.jsx';
 import { cancelBookingRequest, fetchEventById, fetchMyBookings } from '../services/api.js';
 import { useAuth } from '../context/useAuth.js';
+import { useConfirm } from '../context/useConfirm.js';
 import { formatDateTime } from '../utils/formatDate.js';
 
 const initialState = { bookings: [], loading: true, error: '', cancellingId: '' };
@@ -50,6 +51,7 @@ async function attachEventDetails(bookings, token) {
 
 export default function MyBookingsPage() {
   const { token } = useAuth();
+  const confirm = useConfirm();
   const [state, dispatch] = useReducer(bookingsReducer, initialState);
   const { bookings, loading, error, cancellingId } = state;
 
@@ -76,12 +78,19 @@ export default function MyBookingsPage() {
     // un-cancel, and cancelBooking() calls releaseSeats(), so the seats go straight
     // back on sale — on a nearly-full event somebody else can take them at once.
     const eventTitle = booking.event?.title || 'this event';
-    const message =
-      `Cancel your booking of ${booking.seatsBooked} seat(s) for "${eventTitle}"?\n\n` +
-      'This cannot be undone. The seats go back on sale immediately, so they may ' +
-      'be taken by someone else — you would have to book again and might not get them.';
 
-    if (!window.confirm(message)) {
+    const confirmed = await confirm({
+      title: 'Cancel this booking?',
+      lines: [
+        `You are giving up ${booking.seatsBooked} seat(s) for "${eventTitle}".`,
+        'This cannot be undone. The seats go back on sale immediately, so someone else may take them — you would have to book again and might not get them.'
+      ],
+      confirmLabel: 'Cancel booking',
+      cancelLabel: 'Keep booking',
+      tone: 'danger'
+    });
+
+    if (!confirmed) {
       return;
     }
 

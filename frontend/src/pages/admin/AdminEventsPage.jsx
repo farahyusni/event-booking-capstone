@@ -8,6 +8,7 @@ import FilterPanel from '../../components/FilterPanel.jsx';
 import LoadingMessage from '../../components/LoadingMessage.jsx';
 import PaginationControls from '../../components/PaginationControls.jsx';
 import { useAuth } from '../../context/useAuth.js';
+import { useConfirm } from '../../context/useConfirm.js';
 import { useEventData } from '../../context/useEventData.js';
 import { deactivateEventRequest, reactivateEventRequest } from '../../services/api.js';
 import { formatDateTime } from '../../utils/formatDate.js';
@@ -18,6 +19,7 @@ import { formatDateTime } from '../../utils/formatDate.js';
 export default function AdminEventsPage() {
   const initialLoadRef = useRef(false);
   const { token } = useAuth();
+  const confirm = useConfirm();
   const { items, loading, error, pageInfo, filters, loadEventsPage } = useEventData();
   const [actionError, setActionError] = useState('');
   const [deactivatingId, setDeactivatingId] = useState('');
@@ -42,17 +44,26 @@ export default function AdminEventsPage() {
     // seats that are still actively held.
     const bookedSeats = event.capacity - event.seatsAvailable;
 
-    const message =
+    const lines =
       bookedSeats > 0
-        ? `"${event.title}" already has ${bookedSeats} seat(s) booked by customers.\n\n` +
-          'Deactivating stops any NEW bookings. Existing bookings are kept and those ' +
-          'customers keep their seats — they will see a note that the event was cancelled.\n\n' +
-          'You can reactivate this event later.\n\nAre you sure?'
-        : `Deactivate "${event.title}"?\n\n` +
-          'No seats are booked yet. No new bookings can be made after this, ' +
-          'but you can reactivate it later.';
+        ? [
+            `"${event.title}" already has ${bookedSeats} seat(s) booked by customers.`,
+            'Deactivating stops any new bookings. Existing bookings are kept and those customers keep their seats — they will see a note that the event was cancelled.',
+            'You can reactivate this event later.'
+          ]
+        : [
+            `"${event.title}" has no seats booked yet.`,
+            'No new bookings can be made after this, but you can reactivate it later.'
+          ];
 
-    if (!window.confirm(message)) {
+    const confirmed = await confirm({
+      title: 'Deactivate this event?',
+      lines,
+      confirmLabel: 'Deactivate',
+      tone: 'warn'
+    });
+
+    if (!confirmed) {
       return;
     }
 

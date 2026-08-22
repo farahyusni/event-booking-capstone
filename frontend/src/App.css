@@ -1,114 +1,124 @@
 /* ==========================================================================
-   Component-level styles, adapted from the instructor's frontend template
-   (NFS_JAVA/frontend/src/styles.css) so this app matches that visual system.
-   Organised by feature area — search this file by the section comments below.
+   Component styles. Tokens and base element styles live in index.css.
+   Sections below follow the order a user meets them: shell → cards → forms →
+   lists → feedback → auth → modal.
    ========================================================================== */
 
-/* ---------- App shell: header + nav + main content area ---------- */
+/* ---------- App shell ---------- */
 .app-shell {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 32px 0;
+  padding: 0 0 80px;
 }
 
+/* Light header with a hairline rule instead of a heavy dark slab — the page
+   should feel like paper, with the content carrying the weight. */
 .app-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
-  align-items: center;
-  background: #172033;
-  color: white;
-  padding: 28px;
-  border-radius: 24px;
-  box-shadow: 0 20px 50px rgba(23, 32, 51, 0.18);
-}
-
-.eyebrow {
-  margin: 0 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.75rem;
-  color: #a9c4ff;
-  font-weight: 700;
+  padding: 28px 0 22px;
+  border-bottom: 1px solid var(--line);
 }
 
 .app-header h1 {
-  margin: 0;
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
 }
 
 .user-panel {
-  min-width: 190px;
-  display: grid;
-  gap: 8px;
-  justify-items: end;
-}
-
-.user-panel strong {
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* Shared "pill" button look for the logout button, pagination buttons and links */
-.user-panel button,
-.auth-form button,
-.button-link {
-  border: 0;
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 800;
-  cursor: pointer;
-  color: #172033;
-  background: white;
-  text-decoration: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  font-size: 13.5px;
 }
 
-.button-link.secondary {
-  background: #dbeafe;
+.user-panel span {
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
+/* Role chip */
+.user-panel strong {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+}
+
+.user-panel button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.user-panel button:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+
+/* ---------- Navigation ---------- */
 .app-nav {
   display: flex;
-  gap: 10px;
+  gap: 4px;
   flex-wrap: wrap;
-  margin: 20px 0;
+  margin: 18px 0 28px;
 }
 
 .app-nav a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  padding: 8px 14px;
+  border-radius: var(--r-sm);
   text-decoration: none;
-  font-weight: 800;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: white;
-  color: #334155;
-  border: 1px solid #d9e2ef;
+  transition: background 0.15s, color 0.15s;
 }
 
-/* react-router's NavLink adds this class automatically on the matching route */
+.app-nav a:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* react-router's NavLink sets .active on the matching route */
 .app-nav a.active {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: white;
+  background: var(--ink);
+  color: var(--surface);
 }
 
 main {
   display: grid;
-  gap: 20px;
+  gap: 18px;
 }
 
-/* ---------- Generic "card" system used by every panel on a page ---------- */
+/* ---------- Cards ---------- */
 .card,
 .filter-panel,
 .empty-state {
-  background: white;
-  border: 1px solid #d9e2ef;
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(23, 32, 51, 0.08);
-  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 22px 24px;
 }
 
 .section-heading {
@@ -116,12 +126,14 @@ main {
 }
 
 .section-heading h2 {
-  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
 .section-heading p {
-  color: #667085;
-  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-3);
 }
 
 .welcome-card {
@@ -129,6 +141,18 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap;
+}
+
+.welcome-card h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.welcome-card p {
+  font-size: 13.5px;
+  color: var(--ink-3);
 }
 
 .action-row {
@@ -143,80 +167,160 @@ main {
   margin-top: 0;
 }
 
-/* ---------- Filter panel (search + category on the Events list) ---------- */
-.filter-panel {
-  display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 16px;
-  margin-bottom: 20px;
+/* ---------- Buttons ---------- */
+.btn,
+.button-link,
+.auth-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
+.btn-solid,
+.button-link,
+.auth-form button {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-solid:hover,
+.button-link:hover,
+.auth-form button:hover:not(:disabled) {
+  background: var(--accent-hover);
+  text-decoration: none;
+}
+
+/* Secondary / ghost — quieter actions sitting next to a primary one */
+.btn-ghost,
+.button-link.secondary {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink-2);
+}
+
+.btn-ghost:hover,
+.button-link.secondary:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+  background: var(--surface);
+  text-decoration: none;
+}
+
+button:disabled,
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- Forms ---------- */
 label {
   display: grid;
-  gap: 8px;
-  color: #344054;
-  font-weight: 700;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 input,
 select,
 textarea {
   width: 100%;
-  border: 1px solid #ccd6e3;
-  border-radius: 12px;
-  padding: 12px;
-  background: #fbfcff;
-  font-family: inherit;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 textarea {
   resize: vertical;
+  min-height: 84px;
 }
 
-/* ---------- Event list (one row per event, links to the details page) ---------- */
+.filter-panel {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 16px;
+}
+
+/* ---------- Event list ---------- */
 .event-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .event-row {
-  border: 1px solid #d9e2ef;
-  border-radius: 14px;
-  padding: 16px;
-  background: #fbfcff;
-  text-decoration: none;
-  color: inherit;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
 }
 
-.event-row:hover {
-  border-color: #3b82f6;
-  background: #eff6ff;
+a.event-row:hover {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  text-decoration: none;
+}
+
+.event-row strong {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .event-row span {
   display: block;
-  color: #667085;
-  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 3px;
 }
 
-/* Cancelled events still show up in search results, just visually muted/flagged */
 .event-row.cancelled {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
-/* Both need the .event-row prefix to out-specify `.event-row span` above. */
+/* Prefixed to out-specify `.event-row span` above */
 .event-row .seats-left {
-  font-size: 0.85rem;
   font-weight: 600;
-  color: #667085;
+  color: var(--ink-2);
 }
 
 .event-row .seats-left.sold-out {
-  color: #991b1b;
+  color: var(--bad);
 }
 
 .event-row-side {
@@ -226,13 +330,12 @@ textarea {
   flex: none;
 }
 
-/* Needs the .event-row prefix to out-specify `.event-row span` above, which
-   would otherwise force this to display:block and the muted grey. */
 .event-row .event-price {
   display: inline;
   margin: 0;
-  color: #172033;
+  font-size: 14px;
   font-weight: 700;
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -240,212 +343,351 @@ textarea {
 .category-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.03em;
-  background: #dbeafe;
-  color: #1d4ed8;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  white-space: nowrap;
 }
 
-/* ---------- Event details page (label/value pairs) ---------- */
+/* ---------- Event details ---------- */
 .detail-list {
   display: grid;
-  gap: 12px;
+  gap: 0;
   margin: 0;
 }
 
 .detail-list div {
-  border-bottom: 1px solid #eef2f7;
-  padding-bottom: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line-2);
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.detail-list div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 dt {
-  color: #667085;
-  font-size: 0.85rem;
-  margin-bottom: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-3);
 }
 
 dd {
   margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---------- Bookings ---------- */
+.booking-list {
+  display: grid;
+  gap: 8px;
+}
+
+.booking-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+}
+
+.booking-row strong {
+  display: block;
+  font-size: 14.5px;
   font-weight: 700;
 }
 
-/* ---------- Loading / error / empty feedback ---------- */
+.booking-row span {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 3px;
+}
+
+.booking-row a {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* Prefixed to out-specify `.booking-row span` */
+.booking-row .cancelled-notice {
+  font-weight: 600;
+  color: var(--bad);
+}
+
+.booking-row-actions,
+.admin-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: none;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.status-confirmed {
+  background: var(--ok-soft);
+  color: var(--ok);
+  border-color: var(--ok-line);
+}
+
+.status-cancelled {
+  background: var(--bad-soft);
+  color: var(--bad);
+  border-color: var(--bad-line);
+}
+
+/* ---------- Reports ---------- */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.report-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 14px 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.report-table td {
+  padding: 12px 14px 12px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ---------- Feedback ---------- */
 .message {
   margin: 0;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 1px solid transparent;
 }
 
 .loading-message {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: var(--surface-2);
+  color: var(--ink-2);
 }
 
 .error-message {
-  background: #fef2f2;
-  color: #991b1b;
+  background: var(--bad-soft);
+  color: var(--bad);
+  border-color: var(--bad-line);
+}
+
+.success-message {
+  background: var(--ok-soft);
+  color: var(--ok);
+  border-color: var(--ok-line);
 }
 
 .empty-state {
-  color: #667085;
+  color: var(--ink-3);
+  font-size: 13.5px;
+  text-align: center;
+  padding: 36px 24px;
 }
 
-/* ---------- Auth pages (login / register) ---------- */
+/* ---------- Auth pages ---------- */
 .auth-page {
-  width: min(420px, calc(100% - 32px));
-  margin: 64px auto;
-  background: white;
-  border: 1px solid #d9e2ef;
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(23, 32, 51, 0.08);
-  padding: 24px;
+  width: min(400px, calc(100% - 40px));
+  margin: 72px auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  box-shadow: var(--shadow);
+}
+
+.auth-page h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
 .auth-form {
   display: grid;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 16px;
+  margin: 24px 0 20px;
 }
 
 .auth-form button {
-  background: #3b82f6;
-  color: white;
-  justify-self: start;
+  width: 100%;
+  padding: 11px 16px;
+  margin-top: 4px;
 }
 
-/* Demo credentials hint on the login page */
+.auth-page > p {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
 .login-help {
-  margin-top: 22px;
-  padding: 14px 16px;
-  border: 1px dashed #ccd6e3;
-  border-radius: 12px;
-  background: #f7f9fc;
   display: grid;
   gap: 3px;
-  font-size: 0.9rem;
-  color: #667085;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r);
+  background: var(--surface-2);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .login-help strong {
-  color: #344054;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
   margin-bottom: 3px;
 }
 
-@media (max-width: 860px) {
+/* ---------- Confirm modal ---------- */
+/* Replaces window.confirm, which renders as an OS-level "localhost says…" box
+   outside the page's design entirely. */
+.modal {
+  width: min(440px, calc(100vw - 40px));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lg);
+  animation: modal-in 0.16s ease-out;
+}
+
+.modal::backdrop {
+  background: rgba(28, 25, 23, 0.4);
+  animation: fade-in 0.16s ease-out;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.modal-body {
+  padding: 24px 24px 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.modal-body h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.modal-body p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line-2);
+  background: var(--surface-2);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+}
+
+/* Tone colours the confirming button only — the cancel button stays neutral
+   so the safe choice never competes for attention. */
+.modal-danger .btn-solid {
+  background: var(--bad);
+}
+
+.modal-danger .btn-solid:hover {
+  background: #B91C1C;
+}
+
+.modal-warn .btn-solid {
+  background: var(--warn);
+}
+
+.modal-warn .btn-solid:hover {
+  background: #92400E;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 780px) {
   .app-header,
   .welcome-card {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .user-panel {
-    justify-items: start;
-  }
-
   .filter-panel {
     grid-template-columns: 1fr;
   }
-}
 
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+  .event-row,
+  .booking-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-/* ---------- My Bookings ---------- */
-.booking-list {
-  display: grid;
-  gap: 10px;
-}
+  .detail-list div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 
-.booking-row {
-  border: 1px solid #d9e2ef;
-  border-radius: 14px;
-  padding: 16px;
-  background: #fbfcff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
 
-.booking-row span {
-  display: block;
-  color: #667085;
-  margin-top: 4px;
-}
-
-/* Needs the .booking-row prefix to out-specify `.booking-row span` above,
-   which would otherwise force this back to the muted grey. */
-.booking-row .cancelled-notice {
-  display: block;
-  margin-top: 6px;
-  color: #991b1b;
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
-.booking-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-}
-
-.status-confirmed {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-cancelled {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.success-message {
-  background: #dcfce7;
-  color: #166534;
-}
-
-/* ---------- Admin pages (event management, bookings, reports) ---------- */
-.admin-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.report-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.report-table th,
-.report-table td {
-  text-align: left;
-  padding: 10px 12px;
-  border-bottom: 1px solid #eef2f7;
-}
-
-.report-table th {
-  color: #667085;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  .modal-actions .btn {
+    width: 100%;
+  }
 }
